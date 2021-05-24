@@ -31,6 +31,7 @@ import com.example.androidgpstracker.databinding.ActivityMainBinding;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,11 +43,15 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int PERMISSION_FINE_LOCATION = 100;
     TextView tv_lat, tv_lon, tv_altitude, tv_accuracy, tv_speed, tv_sensor,
-            tv_updates, tv_address;
-
+            tv_updates, tv_address, tv_waypointCounts;
+    Button btn_newWayPoint, btn_showWaypointList;
     Switch sw_locationupdates, sw_gps;
 
     boolean updateOn = false; // Checks if tracking is enabled
+
+    Location currentLocation; // Current Location
+
+    List<Location> savedLocations;
 
     LocationRequest locationRequest; // Config file that stores settings for FusedLocationProvider
 
@@ -68,11 +73,15 @@ public class MainActivity extends AppCompatActivity {
         tv_sensor = findViewById(R.id.tv_sensor);
         tv_updates = findViewById(R.id.tv_updates);
         tv_address = findViewById(R.id.tv_address);
+        tv_waypointCounts = findViewById(R.id.tv_countOfWaypoints);
 
         sw_locationupdates = findViewById(R.id.sw_locationsupdates);
         sw_gps = findViewById(R.id.sw_gps);
 
-       //Location Request setup to set up location options
+        btn_newWayPoint = findViewById(R.id.btn_newWayPoint);
+        btn_showWaypointList = findViewById(R.id.btn_showWaypointList);
+
+        //Location Request setup to set up location options
         locationRequest = new LocationRequest();
         locationRequest.setInterval(30000);
         locationRequest.setFastestInterval(5000);
@@ -87,6 +96,18 @@ public class MainActivity extends AppCompatActivity {
                 updateUIValues(location);
             }
         };
+
+        btn_newWayPoint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //get gps
+                MyApplication myApplication = (MyApplication)getApplicationContext();
+                savedLocations = myApplication.getMyLocations();
+                savedLocations.add(currentLocation);
+
+            }
+        });
+
 
 
         sw_gps.setOnClickListener(new View.OnClickListener()
@@ -174,6 +195,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(Location location) {
                     updateUIValues(location);
+                    currentLocation = location;
 
 
 
@@ -216,6 +238,11 @@ public class MainActivity extends AppCompatActivity {
         catch(Exception e) {
             tv_address.setText("Cannot find street address");
         }
+
+        MyApplication myApplication = (MyApplication)getApplicationContext();
+        savedLocations = myApplication.getMyLocations();
+
+        tv_waypointCounts.setText(Integer.toString(savedLocations.size()));
 
     }
 
