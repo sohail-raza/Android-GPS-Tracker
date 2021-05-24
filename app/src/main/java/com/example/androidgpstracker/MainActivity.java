@@ -2,6 +2,8 @@ package com.example.androidgpstracker;
 
 import android.os.Bundle;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,6 +31,12 @@ public class MainActivity extends AppCompatActivity {
 
     Switch sw_locationupdates, sw_gps;
 
+    boolean updateOn = false; // Checks if tracking is enabled
+
+    LocationRequest locationRequest; // Config file that stores settings for FusedLocationProvider
+
+    FusedLocationProviderClient fusedLocationProviderClient; //Location Service API
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +54,14 @@ public class MainActivity extends AppCompatActivity {
 
         sw_locationupdates = findViewById(R.id.sw_locationsupdates);
         sw_gps = findViewById(R.id.sw_gps);
+
+       //Location Request setup to set up location options
+        locationRequest = new LocationRequest();
+        locationRequest.setInterval(30000);
+        locationRequest.setFastestInterval(5000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+
+
 
 
 
