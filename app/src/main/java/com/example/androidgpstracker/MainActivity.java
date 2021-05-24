@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_FINE_LOCATION = 100;
     TextView tv_lat, tv_lon, tv_altitude, tv_accuracy, tv_speed, tv_sensor,
             tv_updates, tv_address, tv_waypointCounts;
-    Button btn_newWayPoint, btn_showWaypointList;
+    Button btn_newWayPoint, btn_showWaypointList, btn_showMap;
     Switch sw_locationupdates, sw_gps;
 
     boolean updateOn = false; // Checks if tracking is enabled
@@ -82,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
         btn_newWayPoint = findViewById(R.id.btn_newWayPoint);
         btn_showWaypointList = findViewById(R.id.btn_showWaypointList);
 
+        btn_showMap = findViewById(R.id.btn_showMap);
+
         //Location Request setup to set up location options
         locationRequest = new LocationRequest();
         locationRequest.setInterval(30000);
@@ -108,6 +110,17 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        btn_showMap.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v)
+           {
+                Intent i = new Intent(MainActivity.this,MapsActivity.class);
+                startActivity(i);
+           }
+
+        });
+
 
         btn_showWaypointList.setOnClickListener(new View.OnClickListener() {
             @Override
