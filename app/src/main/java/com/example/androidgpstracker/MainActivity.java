@@ -7,7 +7,9 @@ import android.os.Build;
 import android.os.Bundle;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
@@ -44,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
 
     LocationRequest locationRequest; // Config file that stores settings for FusedLocationProvider
 
+    LocationCallback locationCallBack;
+
     FusedLocationProviderClient fusedLocationProviderClient; //Location Service API
 
     @Override
@@ -70,6 +74,16 @@ public class MainActivity extends AppCompatActivity {
         locationRequest.setFastestInterval(5000);
         locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 
+        locationCallBack = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+
+                Location location = locationResult.getLastLocation();
+                updateUIValues(location);
+            }
+        };
+
 
         sw_gps.setOnClickListener(new View.OnClickListener()
         {
@@ -88,7 +102,42 @@ public class MainActivity extends AppCompatActivity {
 
            }
         });
+        sw_locationupdates.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(sw_locationupdates.isChecked()) {
+                    // location tracking enabled
+                    startLocationUpdates();
+                }
+                else {
+                    stopLocationUpdates();
+                }
+            }
+        });
+
+
+
         updateGPS();
+    }
+
+    private void startLocationUpdates() {
+        tv_updates.setText("Location is being tracked");
+        fusedLocationProviderClient.requestLocationUpdates(locationRequest,locationCallBack,null);
+        updateGPS();
+    }
+
+    private void stopLocationUpdates() {
+        tv_updates.setText("Location is not being tracked");
+        tv_lat.setText("Not tracking location");
+        tv_lon.setText("Not tracking location");
+        tv_speed.setText("Not tracking location");
+        tv_altitude.setText("Not tracking location");
+        tv_address.setText("Not tracking location");
+        tv_accuracy.setText("Not tracking location");
+        tv_sensor.setText("Not tracking location");
+
+        fusedLocationProviderClient.removeLocationUpdates(locationCallBack);
+
     }
 
     @Override
