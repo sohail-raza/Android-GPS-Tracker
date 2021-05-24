@@ -3,6 +3,7 @@
     package="com.example.androidgpstracker">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -11,6 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidGPSTracker">
+        <activity android:name=".ShowSavedLocationsList"></activity>
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
