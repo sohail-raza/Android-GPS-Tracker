@@ -2,6 +2,8 @@ package com.example.androidgpstracker;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -32,6 +34,8 @@ import android.view.MenuItem;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -201,6 +205,16 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             tv_speed.setText("Not available on this device");
+        }
+
+        Geocoder geocoder = new Geocoder(MainActivity.this);
+        try{
+            List<Address> address = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+            tv_address.setText(address.get(0).getAddressLine(0));
+
+        }
+        catch(Exception e) {
+            tv_address.setText("Cannot find street address");
         }
 
     }
